@@ -13,23 +13,22 @@
 #include <math.h>
 
 
-float jugador_y = 0.0f;               // Altura inicial del jugador
-float velocidad = 0.0f;               // Velocidad vertical del jugador
-int saltando = 0;                     // 1 si está saltando
-int pausa = 0;                        // 1 si está pausado
-const float gravedad = -1200.0f;      // Gravedad más fuerte por escala
-const float salto = 950.0f;           // Velocidad inicial del salto
-const int fps = 60;                   // Frames por segundo
-float velocidad_obstaculo = 200.0f;   // Velocidad inicial del obstáculo (en unidades por segundo)
+float jugador_y = 0.0f;               
+float velocidad = 0.0f;               
+int saltando = 0;                     
+int pausa = 0;                        
+const float gravedad = -1200.0f;      
+const float salto = 950.0f;           
+const int fps = 60;                   
+float velocidad_obstaculo = 200.0f;   
 int puntaje = 0;
 int record = 0;
-int mostrar_texto_estado = 0;     // 1 para mostrar "PAUSA", 2 para mostrar "CONTINUA"
-int contador_texto_estado = 0;    // contador para ocultar el texto de estado
-int paso1 = 0, paso2 = 0, paso3 = 0;
+int mostrar_texto_estado = 0;     
+int contador_texto_estado = 0;    
 int cambios_velocidad = 0;
 int mostrar_gameover = 0;
-int tiempo = 0;                       // Tiempo transcurrido en frames
-float fondo_offset = 0.0f;            // Desplazamiento del fondo 
+int tiempo = 0;                       
+float fondo_offset = 0.0f;            
 
 int fase = 1;
 
@@ -53,13 +52,13 @@ typedef struct {
 } Obstaculo;
 Obstaculo obstaculos[] = {
 	{600.0f, -135.0f, 1, 30.0f, 50.0f},
-	{950.0f, -135.0f, 1, 30.0f, 50.0f},
+{950.0f, -135.0f, 1, 30.0f, 50.0f},
 	{1300.0f, -135.0f, 1, 30.0f, 50.0f},
-	{1800.0f, 80.0f, 2, 40.0f, 100.0f},
+{1800.0f, 80.0f, 2, 40.0f, 100.0f},
 	{2300.0f, 100.0f, 2, 40.0f, 100.0f},
-	{2800.0f, 100.0f, 2, 40.0f, 100.0f},
+{2800.0f, 100.0f, 2, 40.0f, 100.0f},
 	{3200.0f, -135.0f, 1, 30.0f, 80.0f},
-	{3650.0f, -135.0f, 1, 30.0f, 80.0f},
+{3650.0f, -135.0f, 1, 30.0f, 80.0f},
 	{4000.0f, -135.0f, 1, 30.0f, 80.0f}	
 };
 const int total_obstaculos = sizeof(obstaculos) / sizeof(obstaculos[0]);
@@ -68,7 +67,7 @@ int paso_obstaculo[9] = {0};
 int punto_obstaculo[9] = {0};
 
 float distancia_original[] = {
-		obstaculos[1].x - obstaculos[0].x, 
+	obstaculos[1].x - obstaculos[0].x, 
 		obstaculos[2].x - obstaculos[1].x,  
 		obstaculos[3].x - obstaculos[2].x,  
 		obstaculos[4].x - obstaculos[3].x,  
@@ -78,7 +77,7 @@ float distancia_original[] = {
 		obstaculos[8].x - obstaculos[7].x,
 		500.0f  
 };
-//carlos
+
 int cargarTGA(const char *nombre, textura *imagen) {
 	GLubyte cabezeraTGA[12] = {0,0,2,0,0,0,0,0,0,0,0,0};
 	GLubyte compararTGA[12];
@@ -139,7 +138,7 @@ int cargarTGA(const char *nombre, textura *imagen) {
 		return 1;
 }
 
-//carlos
+
 void cargando_texturas() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -161,7 +160,6 @@ void cargando_texturas() {
 	if (!cargarTGA("tJugador4.tga", &tga_jugador4)) printf("No se pudo cargar tJugador4.tga\n");
 	
 }
-//frank
 void reshape_cb(int w, int h) {
 	if (h == 0) h = 1;
 	glMatrixMode(GL_PROJECTION);
@@ -171,7 +169,7 @@ void reshape_cb(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-//alonso
+
 void luz(){
 	GLfloat light_position[] = {0, 0, 1, 0}; 
 	glEnable(GL_BLEND);
@@ -185,7 +183,7 @@ void luz(){
 	
 }
 	
-	//gustavo
+	
 	void dibujar_fondo() {
 		glLoadIdentity();
 		glDisable(GL_LIGHTING);
@@ -209,7 +207,7 @@ void luz(){
 		glEnable(GL_LIGHTING);
 	}
 	
-	//giordana
+	
 	void dibujar_suelo() {
 		glLoadIdentity();
 		glDisable(GL_LIGHTING);
@@ -221,22 +219,21 @@ void luz(){
 		case 4: glBindTexture(GL_TEXTURE_2D, tga_suelo4.ID); break;
 		}
 		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0); glVertex2f(-500, -135);  // parte superior del suelo
+		glTexCoord2f(0, 0); glVertex2f(-500, -135);  
 		glTexCoord2f(1, 0); glVertex2f(500, -135);  
-		glTexCoord2f(1, 1); glVertex2f(500, -500);  // parte inferior del suelo
+		glTexCoord2f(1, 1); glVertex2f(500, -500);  
 		glTexCoord2f(0, 1); glVertex2f(-500, -500);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 	}
 	
-	//giordanna
+	
 	void dibujar_jugador() {
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
 		
-		glColor3f(1, 1, 1);
 		switch (fase) {
 		case 1: glBindTexture(GL_TEXTURE_2D, tga_jugador1.ID); break;
 		case 2: glBindTexture(GL_TEXTURE_2D, tga_jugador2.ID); break;
@@ -245,8 +242,8 @@ void luz(){
 		}
 		
 		
-		glTranslatef(-350.0f, jugador_y - 101.0f, 0); // Posición X fija, Y controlada por salto
-		glScalef(50.0f, 50.0f, 1); // Tamaño del jugador: 100x100 unidades
+		glTranslatef(-350.0f, jugador_y - 101.0f, 0); 
+		glScalef(50.0f, 50.0f, 1); 
 		
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,0); glVertex2f(-1, 1);
@@ -261,8 +258,8 @@ void luz(){
 		glPopMatrix();
 	}
 	
-	//flavio
-	// Función para dibujar cono
+	
+	
 	void dibujar_cono(Obstaculo obs) {
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
@@ -270,7 +267,7 @@ void luz(){
 		glTranslatef(obs.x, obs.y, 0);
 		
 		switch (fase) {
-		case 1: { // Amarillo
+		case 1: { 
 			GLfloat ambient[]  = {1.0f, 1.0f, 0.0f, 1.0f};
 			GLfloat diffuse[]  = {1.0f, 1.0f, 0.0f, 1.0f};
 			GLfloat specular[] = {1.0f, 1.0f, 0.4f, 1.0f};
@@ -280,7 +277,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 50.0f);
 			break;
 		}
-		case 2: { // Blanco con bordes celestes (nieve)
+		case 2: { 
 			GLfloat ambient[]  = {0.8f, 0.9f, 1.0f, 1.0f};
 			GLfloat diffuse[]  = {1.0f, 1.0f, 1.0f, 1.0f};
 			GLfloat specular[] = {0.6f, 0.8f, 1.0f, 1.0f};
@@ -290,7 +287,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 80.0f);
 			break;
 		}
-		case 3: { // Gris oscuro
+		case 3: { 
 			GLfloat ambient[]  = {0.2f, 0.2f, 0.2f, 1.0f};
 			GLfloat diffuse[]  = {0.3f, 0.3f, 0.3f, 1.0f};
 			GLfloat specular[] = {0.05f, 0.05f, 0.05f, 1.0f};
@@ -300,7 +297,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 100.0f);
 			break;
 		}
-		case 4: { // Marrón
+		case 4: { 
 			GLfloat ambient[]  = {0.4f, 0.2f, 0.0f, 1.0f};
 			GLfloat diffuse[]  = {0.6f, 0.3f, 0.1f, 1.0f};
 			GLfloat specular[] = {0.3f, 0.2f, 0.1f, 1.0f};
@@ -318,8 +315,8 @@ void luz(){
 		
 		glPopMatrix();
 	}
-	//flavio
-	// Función para dibujar cubo
+	
+	
 	void dibujar_cubo(Obstaculo obs) {
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
@@ -327,8 +324,8 @@ void luz(){
 		glTranslatef(obs.x, obs.y, 0);
 		
 		
-		glRotatef(-10.0f, 1.0f, 0.0f, 0.0f);  // Rotación en X
-		glRotatef(-10.0f, 0.0f, 1.0f, 0.0f);  // Rotación en Y
+		glRotatef(-10.0f, 1.0f, 0.0f, 0.0f);  
+		glRotatef(-10.0f, 0.0f, 1.0f, 0.0f);  
 		switch (fase) {
 		case 1: { // Rojo
 			GLfloat ambient[]  = {0.3f, 0.0f, 0.0f, 1.0f};
@@ -340,7 +337,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 30.0f);
 			break;
 		}
-		case 2: { // Blanco con bordes celestes (nieve)
+		case 2: { 
 			GLfloat ambient[]  = {0.8f, 0.9f, 1.0f, 1.0f};
 			GLfloat diffuse[]  = {1.0f, 1.0f, 1.0f, 1.0f};
 			GLfloat specular[] = {0.6f, 0.8f, 1.0f, 1.0f};
@@ -350,7 +347,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 80.0f);
 			break;
 		}
-		case 3: { // Negro con bordes rojos
+		case 3: { 
 			GLfloat ambient[]  = {0.1f, 0.0f, 0.0f, 1.0f};
 			GLfloat diffuse[]  = {0.2f, 0.0f, 0.0f, 1.0f};
 			GLfloat specular[] = {0.8f, 0.0f, 0.0f, 1.0f};
@@ -360,7 +357,7 @@ void luz(){
 			glMaterialf(GL_FRONT, GL_SHININESS, 100.0f);
 			break;
 		}
-		case 4: { // Morado
+		case 4: { 
 			GLfloat ambient[]  = {0.3f, 0.0f, 0.3f, 1.0f};
 			GLfloat diffuse[]  = {0.6f, 0.0f, 0.6f, 1.0f};
 			GLfloat specular[] = {0.9f, 0.3f, 0.9f, 1.0f};
@@ -376,8 +373,8 @@ void luz(){
 		glPopMatrix();
 	}
 	
-	//flavio
-	// Nueva función que selecciona qué dibujar según el tipo
+	
+	
 	void dibujar_obstaculo_3d(Obstaculo obs) {
 		switch (obs.tipo) {
 		case 1:
@@ -392,7 +389,7 @@ void luz(){
 		}
 	}
 	
-	//gustavo
+	
 	void mostrar_gameover_imagen() {
 		if (!mostrar_gameover) return;
 		
@@ -412,9 +409,8 @@ void luz(){
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 	}
-	//alonso
 	int esta_sobre_cubo(Obstaculo obs) {
-		float factor_colision_cubo = 0.8f; // debe coincidir con el usado en colision()
+		float factor_colision_cubo = 0.8f;
 		
 		float lado_visual = obs.ancho * 2.0f;
 		float lado_colision = lado_visual * factor_colision_cubo;
@@ -434,7 +430,7 @@ void luz(){
 				fabs(jugador_aba - obst_arr) <= 20.0f &&
 				velocidad <= 0);
 	}
-	//alonso
+	
 	int colision(Obstaculo obs) {
 		// Posición y tamaño del jugador
 		float jugador_x = -350.0f;
@@ -447,7 +443,7 @@ void luz(){
 		float jugador_arr = jugador_y_real + jugador_alto;
 		float jugador_aba = jugador_y_real - jugador_alto;
 		
-		// Tamaño real del obstáculo basado en su tipo y escala visual
+		
 		float obst_izq, obst_der, obst_arr, obst_aba;
 		
 		if (obs.tipo == 1) { 
@@ -462,7 +458,7 @@ void luz(){
 		}
 		else if (obs.tipo == 2) {
 			float factor_colision_cubo = 0.8f;
-			float lado_visual = obs.ancho * 2.0f; // lado del cubo dibujado
+			float lado_visual = obs.ancho * 2.0f; 
 			float lado_colision = lado_visual * factor_colision_cubo; // bounding box ajustado
 			
 			obst_izq = obs.x - lado_colision / 2.0f;
@@ -482,10 +478,6 @@ void luz(){
 		
 		return 1;
 	}
-	//alonso
-	
-	
-	//carlos
 	void dibujar_texto(float x, float y, const char* texto, void* fuente) {
 		glRasterPos2f(x, y);
 		while (*texto) {
@@ -493,23 +485,20 @@ void luz(){
 			texto++;
 		}
 	}	
-	//carlos
 	void mostrar_puntaje() {
 		glDisable (GL_LIGHTING);
-		glColor3f(1.0f, 1.0f, 1.0f);  // Blanco
+		glColor3f(1.0f, 1.0f, 1.0f);  
 		
 		char texto[64];
 		sprintf(texto, "Puntaje: %06d  Record: %06d", puntaje, record);
 		
 		dibujar_texto(-490.0f, -490.0f, texto, GLUT_BITMAP_HELVETICA_12);
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 	}
-	//frank
 	void mostrar_estado_pausa() {
 		if (mostrar_texto_estado == 0) return;
 		
 		glDisable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
 		glColor3f(1.0f, 1.0f, 0.4f);  
 		
 		if (mostrar_texto_estado == 1)
@@ -517,10 +506,9 @@ void luz(){
 		else if (mostrar_texto_estado == 2)
 			dibujar_texto(-100.0f, 0.0f, "CONTINUA", GLUT_BITMAP_TIMES_ROMAN_24);
 		
-		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_LIGHTING);
 	}
-	//alonso
+	
 	void display_cb() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
@@ -530,7 +518,7 @@ void luz(){
 		mostrar_puntaje();
 		
 		if (mostrar_gameover) {
-			mostrar_gameover_imagen();  // Solo muestra la imagen final
+			mostrar_gameover_imagen();  
 		} else {
 			dibujar_jugador();
 			for (int i = 0; i < total_obstaculos; i++) {
@@ -548,13 +536,13 @@ void luz(){
 		glutSwapBuffers();
 	}
 	
-	//alexis
+	
 	
 	void update(int value) {
 		if (!pausa) {
 			float jugador_ancho = 50.0f;
 			float jugador_alto = 50.0f;
-			// Movimiento vertical del jugador (salto)
+			
 			if (saltando || jugador_y > 0) {
 				// Aumentar la gravedad si está cayendo
 				if (velocidad < 0) {
@@ -614,14 +602,14 @@ void luz(){
 			}
 			
 			
-			// Aumentar la velocidad cada cierto tiempo
+			
 			tiempo++;
-			if (tiempo % (15 * fps) == 0) {
+			if (tiempo % (20 * fps) == 0) {
 				velocidad_obstaculo += 50.0f;
 				cambios_velocidad++;
 				
 				fase++;
-				if (fase > 4) fase = 1;  // volver a la fase 1
+				if (fase > 4) fase = 1;  
 				printf("Fase %d activada\n", fase);
 			}
 			
@@ -631,13 +619,13 @@ void luz(){
 					if (puntaje > record) record = puntaje;
 					pausa = 1;
 					mostrar_gameover = 1;
-					break;  // Terminar el bucle tras detectar la colisión
+					break; 
 				}
 			}
-				
-				// Fondo que se desplaza
-				fondo_offset += (velocidad_obstaculo / fps) * 0.001f;  // movimiento proporcional
-				if (fondo_offset > 1.0f) fondo_offset -= 1.0f;
+			
+			// Fondo que se desplaza
+			fondo_offset += (velocidad_obstaculo / fps) * 0.001f;  
+			if (fondo_offset > 1.0f) fondo_offset -= 1.0f;
 		}
 		if (mostrar_texto_estado == 2 && contador_texto_estado > 0) {
 			contador_texto_estado--;
@@ -648,7 +636,7 @@ void luz(){
 		glutTimerFunc(1000 / fps, update, 0);
 	}
 	
-	//alexis
+	
 	void keyboard_cb(unsigned char key, int x, int y) {
 		if (mostrar_gameover) {
 			switch (key) {
@@ -684,10 +672,10 @@ void luz(){
 			case 13:  // Enter
 				pausa = !pausa;
 				if (pausa)
-					mostrar_texto_estado = 1;  // Mostrar "PAUSA"
+					mostrar_texto_estado = 1;  
 				else {
-					mostrar_texto_estado = 2;  // Mostrar "CONTINUA"
-					contador_texto_estado = fps * 0.5;  // Mostrarlo por 2 segundos
+					mostrar_texto_estado = 2;  
+					contador_texto_estado = fps * 0.5; 
 				}
 				break;
 				
@@ -723,6 +711,9 @@ void luz(){
 		glutMainLoop();
 		return 0;
 	}
+	
+	
+	
 	
 	
 	
